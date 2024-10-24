@@ -1,28 +1,65 @@
+// Posts.jsx
+import React, { useState } from "react";
+
+// ข้อมูล Post จากโจทย์
+const initialPosts = [
+  { id: 1, title: "Paper Clips", content: "Post Content...", likes: 61 },
+  { id: 2, title: "Born to Kill", content: "Post Content...", likes: 46 },
+  { id: 3, title: "Ten Shrews", content: "Post Content...", likes: 50 },
+];
+
 function Posts() {
+  // ใช้ useState ในการเก็บข้อมูลโพสต์
+  const [posts, setPosts] = useState(initialPosts);
+
+  // ฟังก์ชันสำหรับเพิ่ม Like
+  const handleLike = (postId) => {
+    const updatedPosts = posts.map((post) =>
+      post.id === postId ? { ...post, likes: post.likes + 1 } : post
+    );
+    setPosts(updatedPosts);
+  };
+
+  // ฟังก์ชันสำหรับลด Like (ต้องไม่ต่ำกว่า 0)
+  const handleDislike = (postId) => {
+    const updatedPosts = posts.map((post) =>
+      post.id === postId && post.likes > 0
+        ? { ...post, likes: post.likes - 1 }
+        : post
+    );
+    setPosts(updatedPosts);
+  };
+
   return (
-    <div class="app-wrapper">
-      <h1 class="app-title">Posts</h1>
-      <div class="post-list">
-        <div class="post-item">
-          <div class="post-header">
-            <h2>Post Title #1</h2>
-            <div class="post-social-media-stats">
-              <span class="stats-topic">Likes: </span>
-              <span class="post-likes">10</span>
+    <div className="app-wrapper">
+      <h1 className="app-title">Posts</h1>
+      <div className="post-list">
+        {posts.map((post) => (
+          <div key={post.id} className="post-item">
+            <div className="post-header">
+              <h2>{post.title}</h2>
+              <div className="post-social-media-stats">
+                <span className="stats-topic">Likes: </span>
+                <span className="post-likes">{post.likes}</span>
+              </div>
+            </div>
+            <p className="post-content">{post.content}</p>
+            <div className="post-actions">
+              <button
+                onClick={() => handleLike(post.id)}
+                className="like-button"
+              >
+                Like
+              </button>
+              <button
+                onClick={() => handleDislike(post.id)}
+                className="dislike-button"
+              >
+                Dislike
+              </button>
             </div>
           </div>
-          <p class="post-content">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-            vel turpis vestibulum, aliquet ipsum vitae, auctor risus. Morbi
-            tincidunt, leo non molestie consectetur, elit libero faucibus
-            tellus, sed fringilla tortor libero sit amet odio. Maecenas sed ante
-            condimentum mauris euismod pellentesque eu eu justo...
-          </p>
-          <div class="post-actions">
-            <button class="like-button">Like</button>
-            <button class="dislike-button">Dislike</button>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );
